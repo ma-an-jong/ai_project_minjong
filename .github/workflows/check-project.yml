@@ -1,0 +1,58 @@
+name: AI Workflow Check
+
+# Run this workflow only when main receives a push.
+on:
+  push:
+    branches:
+      - main
+
+# Keep the workflow simple with a single job.
+jobs:
+  check-project:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Fetch the repository code into the runner.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Print the required log messages.
+      - name: Print logs
+        run: |
+          echo "코드 수정이 일어났습니다."
+          echo "AI Workflow 자동화가 실행되었습니다."
+          echo "자동 검사 완료"
+
+      # Show the current project file list.
+      - name: List project files
+        run: ls -la
+
+      # Check whether the required files exist.
+      # If any file is missing, exit 1 to fail the workflow.
+      - name: Check required files
+        run: |
+          missing=0
+
+          if [ ! -f "index.html" ]; then
+            echo "Missing file: index.html"
+            missing=1
+          fi
+
+          if [ ! -f "script.js" ]; then
+            echo "Missing file: script.js"
+            missing=1
+          fi
+
+          if [ ! -f "style.css" ]; then
+            echo "Missing file: style.css"
+            missing=1
+          fi
+
+          if [ ! -f "README.md" ]; then
+            echo "Missing file: README.md"
+            missing=1
+          fi
+
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
